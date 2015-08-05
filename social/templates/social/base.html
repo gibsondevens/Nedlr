@@ -1,0 +1,51 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{% block title %}Nedlr{% endblock %}</title>
+	<meta name = "viewport" content = "width=device-width, initial-scale=1" />
+
+	<link rel = "stylesheet" type = "text/css" href = "{% static 'social/style/reset.css' %}" />
+		<!-- resets the browser styling -->
+	<link rel = "stylesheet" type = "text/css" href = "{% static 'social/style/bootstrap.min.css' %}" />
+		<!-- sets styling from bootstrap -->
+	<link rel = "stylesheet" type = "text/css" href = "{% static 'social/style/style.css' %}" />
+			<!-- sets my custom styling -->
+	<script type = "text/javascript" src = "{% static 'social/js/jquery-2.1.4.min.js' %}"></script>
+	<script type = "text/javascript" src = "{% static 'social/js/bootstrap.min.js' %}"></script>
+</head>
+
+<body>
+	<script type = "text/javascript" src = "{% static 'social/js/facebook.sdk.js' %}"></script>
+
+	<div class = "container-fluid">
+		<div class = "row header">
+			<div class = "col-md-4 logo-field">
+				<a href="{% url 'social:index' %}"><img class = "mugshot" src="{% static 'social/style/images/image1.jpeg' %}" /><h1 class = "index-title">{% block logo %}Nedlr{% endblock logo %}</h1></a>
+			</div>
+			<div class = "col-md-4 notification-field">
+				{% if error_message %}
+					<div class="alert alert-danger alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<strong>Woahdiddily!</strong> {{ error_message }}
+					</div>
+				{% endif %}
+				{% if success_message %}
+					<div class="alert alert-success alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<strong>Congratsativly!</strong> {{ success_message }}
+					</div>
+				{% endif %}
+			</div>
+			<div class = "col-md-4 loginout">
+				{% block loginout %}{% endblock %}
+			</div>
+		</div>
+
+		<div class = "body">
+			{% block content %}Looks like there's nothing on this page{% endblock content %}
+		</div>
+	</div>
+</body>
+</html>

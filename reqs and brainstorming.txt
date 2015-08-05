@@ -1,0 +1,66 @@
+Standard Django Registration (done)
+
+Facebook Login Integration (done)
+
+Personal "Profiles" where you can set information about yourself (done)
+
+Upload Photos to Profile
+
+Set already-uploaded photo as Profile Picture
+
+View other profile's Information and Wall
+
+Post to your own Wall
+
+Post to another profile's wall
+	# Note that all profiles are Public... no friend requests necessary
+
+Comment system for all Wall Posts
+
+Simple Search for finding Other Profiles
+
+######################################
+# needed views *associated template: #
+######################################
+
+	*base.html (site backbone)
+		login *index.html (landing page)
+		registration *register.html
+		home *home.html
+			edit info *profile_change.html
+		profiles
+			your profile
+				make post
+				photo galleries
+				write comment on posts
+			others profiles
+				photo galleries
+				write comment on posts
+		search result
+
+######################
+# template structure #
+######################
+
+{% extends "social/base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+NedSpace
+{% endblock %}
+
+{% block logo %}
+<h1>NedSpace</h1>
+{% endblock logo %}
+
+{% block alert %}
+
+{% endblock alert %}
+
+{% block loginout %}
+
+{% endblock %}
+
+{% block content %}
+
+{% endblock content %}

@@ -1,0 +1,36 @@
+{% extends "social/base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+	Welcome to Nedlr
+{% endblock %}
+
+{% block logo %}
+	Nedlr
+{% endblock logo %}
+
+{% block loginout %}
+	<form action="{% url 'social:index' %}" method="post" id="enable_fb">
+		{% csrf_token %}
+		<label for="username">User name:</label>
+		<input type="text" name="username" value="" id="username">
+		<br />
+		<label for="password">Password:</label>
+		<input type="password" name="password" value="" id="password">
+		<br />
+		<input type="hidden" name="fb_id" value="" id="fb_id">
+		<button type="submit" class="btn btn-success">Login</button>
+		<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+		</fb:login-button> or <a href="{% url 'social:register' %}">Register</a>
+	</form>
+{% endblock loginout %}
+
+{% block content %}
+	<div class = "row billboard">
+		<h1>Hididdily Hodiddily Neighborino! Welcome to Nedlr!</h1>
+		<br />
+		<br />
+		<br />
+		<button type="button"class="btn btn-danger btn-lg" ><a href="{% url 'social:register' %}" role="button">Register</a></button>
+	</div>
+{% endblock content %}

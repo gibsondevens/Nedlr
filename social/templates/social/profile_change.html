@@ -1,0 +1,27 @@
+{% extends "social/base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+	Nedlr
+{% endblock %}
+
+{% block logo %}
+	Nedlr
+{% endblock logo %}
+
+{% block loginout %}
+	<button type="button" class="btn btn-success"><a href="{% url 'social:logout' %}">Logout</a></button>
+{% endblock %}
+
+{% block content %}
+<div class = "row">
+	<div class = "col-md-12">
+		<h2>Update your profile</h1>
+		<form action="" method="post">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<button type="submit" class="btn btn-danger">Update Profile</button>
+		</form>
+	</div>
+</div>
+{% endblock content %}

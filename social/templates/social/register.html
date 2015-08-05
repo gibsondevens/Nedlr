@@ -1,0 +1,38 @@
+{% extends "social/base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+	Nedlr - Create an account
+{% endblock %}
+
+{% block logo %}
+	Nedlr - Registration
+{% endblock logo %}
+
+{% block loginout %}
+	<form action="{% url 'social:index' %}" method="post">
+		{% csrf_token %}
+		<label for="username">User name:</label>
+		<input type="text" name="username" value="" id="username">
+		<br />
+		<label for="password">Password:</label>
+		<input type="password" name="password" value="" id="password">
+		<br />
+		<button type="submit" class="btn btn-default">Login</button>
+		<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+		</fb:login-button>
+	</form>
+{% endblock loginout %}
+
+{% block content %}
+<div class = "row">
+	<div class = "col-md-12">
+		<h2>Create an account</h1>
+		<form action="" method="post">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<input type="submit" value="Create the account">
+		</form>
+	</div>
+</div>
+{% endblock content %}

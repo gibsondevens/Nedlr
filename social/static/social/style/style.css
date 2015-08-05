@@ -1,0 +1,59 @@
+body {
+	background-color: #005300;
+	color: #FFFFFF;
+}
+
+a:link, a:visited, a:hover, a:active {
+	color: #FFFFFF;
+	background-color: transparent;
+	text-decoration: none;
+}
+
+input, textarea {
+	color: #000000;
+}
+
+.btn-success {
+	background-color: #355C1E;
+}
+
+.btn-danger {
+	background-color: #FF96AC;
+}
+
+.header {
+	background-color: #FF96AC;
+	height: 100px;
+}
+
+.logo-field, .notification-field, .loginout {
+	height: 100%;
+}
+
+.loginout {
+	padding-top: 5px;
+}
+
+.index-title {
+	display: inline-block;
+	position: relative;
+	left: 10px;
+	top: 8px;
+}
+
+.billboard {
+	background-image: url("images/image7.png");
+	background-size: 100%;
+	height: 500px;
+	padding-left: 50px;
+}
+
+.mugshot {
+	height: 90px;
+	width: 75px;
+	margin: 0px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	border-radius: 100%;
+	border: 2px solid #005300;
+}
