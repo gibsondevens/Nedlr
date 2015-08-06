@@ -1,0 +1,17 @@
+{% extends "social/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>{{ user.username }} <small>({{ user.first_name }} {{ user.last_name }})</small></h1>
+			<p>I am a {{ user.profile.religion }}</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h6>Bio:</h6>
+			<p>{{ user.profile.bio }}</p>
+		</div>
+	</div>
+{% endblock content %}

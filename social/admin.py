@@ -4,6 +4,6 @@ from .models import Profile
 
 # Register your models here.
 class ProfileAdmin(admin.ModelAdmin):
-	list_display = ('user', 'religion', 'bio', 'fb_id')
+	fields = ['user', 'religion', 'bio', 'fb_id']
 
-admin.site.register(Profile)
+admin.site.register(Profile, ProfileAdmin)

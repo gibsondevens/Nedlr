@@ -9,8 +9,23 @@ a:link, a:visited, a:hover, a:active {
 	text-decoration: none;
 }
 
-input, textarea {
-	color: #000000;
+label {
+	float: left;
+}
+
+input, textarea, select {
+	color: #000000 !important;
+	position: relative;
+	left: 10px;
+}
+
+h1 small {
+	color: #FFFFFF;
+}
+
+.facebook-button {
+	position: relative;
+	top: 2px;
 }
 
 .btn-success {
@@ -48,6 +63,17 @@ input, textarea {
 	padding-left: 50px;
 }
 
+.logout {
+	position: relative;
+	left: 355px;
+}
+
+.search {
+	margin-top: 10px;
+	position: relative;
+	left: 110px;
+}
+
 .mugshot {
 	height: 90px;
 	width: 75px;
@@ -62,4 +88,32 @@ input, textarea {
 	height: 100px;
 	width: 100px;
 	border: 2px solid #005300;
+}
+
+#search {
+	position: relative;
+	top: 5px;
+}
+
+#search_button {
+	position: relative;
+	left: 15px;
+}
+
+#enable_fb {
+	float: right;
+}
+
+#password {
+	position: relative;
+	left: 15px;
+}
+
+#login_buttons {
+	position: relative;
+	top: 4px
+}
+
+.nope {
+	float: none !important;
 }

@@ -1,6 +1,7 @@
 from django import forms
 from django.db import IntegrityError
 from django.contrib import auth
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, Http404
@@ -12,6 +13,7 @@ from django.utils import timezone
 
 from .models import Profile, Image
 from .forms import CreateUserForm, ProfileForm, UploadImageForm
+from .utils import normalize_query, get_query
 
 # Create your views here.
 def index(request):
@@ -71,7 +73,7 @@ def register(request):
 
 def home(request):
 	if not request.user.is_authenticated():
-		# redirects to index page and shows an error message
+		# redirects to index page
 		return HttpResponseRedirect(reverse("social:index"))
 	else:
 		if request.method == 'POST':
@@ -95,7 +97,7 @@ def home(request):
 
 def change_profile(request):
 	if not request.user.is_authenticated():
-		# redirects to index page and shows an error message
+		# redirects to index page
 		return HttpResponseRedirect(reverse("social:index"))
 	if request.method == 'POST':
 		form = ProfileForm(request.POST, instance=request.user.profile)
@@ -116,7 +118,7 @@ def change_profile(request):
 
 def upload_photo(request):
 	if not request.user.is_authenticated():
-		# redirects to index page and shows an error message
+		# redirects to index page
 		return HttpResponseRedirect(reverse("social:index"))
 	pics = request.user.profile.image_set.all()
 	if request.method == 'POST':
@@ -136,6 +138,26 @@ def upload_photo(request):
 		'form' : form,
 		'pics': pics,
 	})
+
+def profile(request, user_id):
+	if not request.user.is_authenticated():
+		# redirects to index page
+		return HttpResponseRedirect(reverse("social:index"))
+	return render(request, "social/profile.html", {
+		'user': User.objects.get(pk=user_id),
+	})
+
+def search(request):
+	query_string = ''
+	results = None
+	if ('q' in request.GET) and request.GET['q'].strip():
+		query_string = request.GET['q']
+		user_query = get_query(query_string, ['first_name', 'last_name', 'username', 'email'])
+		results = User.objects.filter(user_query)
+	return render(request, 'social/search_results.html', {
+		'query_string': query_string,
+		'results': results
+	}, context_instance=RequestContext(request))
 
 def logout(request):
 	auth.logout(request)

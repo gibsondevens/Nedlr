@@ -5,10 +5,6 @@
 	Welcome to Nedlr
 {% endblock %}
 
-{% block logo %}
-	Nedlr
-{% endblock logo %}
-
 {% block loginout %}
 	<form action="{% url 'social:index' %}" method="post" id="enable_fb">
 		{% csrf_token %}
@@ -19,11 +15,14 @@
 		<input type="password" name="password" value="" id="password">
 		<br />
 		<input type="hidden" name="fb_id" value="" id="fb_id">
-		<button type="submit" class="btn btn-success">Login</button>
-		<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-		</fb:login-button> or <a href="{% url 'social:register' %}">Register</a>
+		<span id="login_buttons"><button type="submit" class="btn btn-success">Login</button>
+		<fb:login-button scope="public_profile,email" onlogin="checkLoginState();" class="facebook-button">
+		</fb:login-button> or <a href="{% url 'social:register' %}">Register</a></span>
 	</form>
 {% endblock loginout %}
+
+{% block search %}
+{% endblock search %}
 
 {% block content %}
 	<div class = "row billboard">

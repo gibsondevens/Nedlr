@@ -1,0 +1,14 @@
+{% extends "social/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+	{% if results %}
+		<ul>
+			{% for user in results %}
+				<li><a href="{% url 'social:profile' user.pk %}">{{ user.username }}</a></li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p>There are no users that match this search</p>
+	{% endif %}
+{% endblock content %}
