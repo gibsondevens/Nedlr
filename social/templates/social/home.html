@@ -10,7 +10,7 @@
 {% endblock logo %}
 
 {% block loginout %}
-	<button type="button" class="btn btn-success"><a href="{% url 'social:logout' %}">Logout</a></button>
+	<button type="button" class="btn btn-success logout"><a href="{% url 'social:logout' %}">Logout</a></button>
 {% endblock %}
 
 {% block content %}
@@ -41,4 +41,5 @@
 		"{{ user.profile.bio }}"
 	</p>
 	<button type="button" class="btn btn-danger"><a href="{% url 'social:profile_change' %}">Update Profile</a></button>
+	<button type="button" class="btn btn-danger"><a href="{% url 'social:upload_photo' %}">Upload Photos</a></button>
 {% endblock content %}

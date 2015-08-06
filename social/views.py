@@ -10,8 +10,8 @@ from django.core.urlresolvers import reverse
 from django.views import generic
 from django.utils import timezone
 
-from .models import Profile
-from .forms import CreateUserForm, ProfileForm
+from .models import Profile, Image
+from .forms import CreateUserForm, ProfileForm, UploadImageForm
 
 # Create your views here.
 def index(request):
@@ -47,6 +47,8 @@ def index(request):
 	return render(request, "social/index.html")
 	
 def register(request):
+	if request.user.is_authenticated():
+		return HttpResponseRedirect(reverse("social:home"))
 	if request.method == 'POST':
 		form = CreateUserForm(request.POST)
 		if form.is_valid():
@@ -92,6 +94,9 @@ def home(request):
 		return render(request, "social/home.html")
 
 def change_profile(request):
+	if not request.user.is_authenticated():
+		# redirects to index page and shows an error message
+		return HttpResponseRedirect(reverse("social:index"))
 	if request.method == 'POST':
 		form = ProfileForm(request.POST, instance=request.user.profile)
 		if form.is_valid():
@@ -107,6 +112,29 @@ def change_profile(request):
 		form = ProfileForm(instance=request.user.profile)
 	return render(request, "social/profile_change.html", {
 		'form': form,
+	})
+
+def upload_photo(request):
+	if not request.user.is_authenticated():
+		# redirects to index page and shows an error message
+		return HttpResponseRedirect(reverse("social:index"))
+	pics = request.user.profile.image_set.all()
+	if request.method == 'POST':
+		form = UploadImageForm(request.POST, request.FILES)
+		if form.is_valid():
+			new_pic = form.save()
+			return HttpResponseRedirect(reverse("social:home"))
+		else:
+			return render(request, "social/photos.html", {
+				'form' : form,
+				'pics': pics,
+				'error_message' : 'The picture you entered is not valid. Please try again.',
+			})
+	else:
+		form = UploadImageForm(initial={"profile": request.user.profile})
+	return render(request, "social/photos.html", {
+		'form' : form,
+		'pics': pics,
 	})
 
 def logout(request):

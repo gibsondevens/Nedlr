@@ -1,5 +1,6 @@
 import datetime
 import random
+import uuid
 
 from django.db import models
 from django.utils import timezone
@@ -20,3 +21,11 @@ class Profile(models.Model):
 
 	def __str__(self):
 		return '%s %s' % (self.user.first_name, self.user.last_name)
+
+class Image(models.Model):
+	profile = models.ForeignKey(Profile)
+
+	def make_pic_dir(instance, filename):
+		return '%s/%s' % ('images', str(uuid.uuid4()) + '.' + filename.split('.')[-1])
+		
+	pic = models.ImageField(upload_to=make_pic_dir)

@@ -46,20 +46,16 @@ Simple Search for finding Other Profiles
 {% load staticfiles %}
 
 {% block title %}
-NedSpace
-{% endblock %}
+	Nedlr
+{% endblock title %}
 
 {% block logo %}
-<h1>NedSpace</h1>
+	Nedlr
 {% endblock logo %}
-
-{% block alert %}
-
-{% endblock alert %}
 
 {% block loginout %}
 
-{% endblock %}
+{% endblock loginout %}
 
 {% block content %}
 

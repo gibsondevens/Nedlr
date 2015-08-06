@@ -57,3 +57,9 @@ input, textarea {
 	border-radius: 100%;
 	border: 2px solid #005300;
 }
+
+.gallery-pics {
+	height: 100px;
+	width: 100px;
+	border: 2px solid #005300;
+}
