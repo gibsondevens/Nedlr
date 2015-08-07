@@ -13,7 +13,7 @@ class Profile(models.Model):
 		('Super Sinner (Atheist)', 'Super Sinner (Atheist)'),
 	)
 	religion = models.CharField(max_length=22, choices=RELIGION_CHOICES, default='Christian')
-	bio = models.TextField(max_length=200, null=True, blank=True)
+	bio = models.TextField(max_length=1000, null=True, blank=True)
 
 	def __str__(self):
 		return '%s %s' % (self.user.first_name, self.user.last_name)
