@@ -41,6 +41,10 @@ h1 small {
 	height: 100px;
 }
 
+.footer {
+	height: 50px;
+}
+
 .logo-field, .notification-field, .loginout {
 	height: 100%;
 }

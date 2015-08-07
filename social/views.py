@@ -14,7 +14,12 @@ from .utils import normalize_query, get_query
 
 # Create your views here.
 def index(request):
+	""" tries to log you in using your facebook by first checking if the facebook button returned a value
+		if it does it checks that against the users in the db
+		if it doesn't it will try to login with your username and password
+	"""
 	if request.user.is_authenticated():
+		# redirects to home if user is signed in
 		return HttpResponseRedirect(reverse("social:home"))
 	if request.method == 'POST':
 		fb_id = request.POST.get('fb_id', '')
@@ -46,7 +51,11 @@ def index(request):
 	return render(request, "social/index.html")
 	
 def register(request):
+	""" takes your form info and creates a user
+		also creates a blank profile for that user
+	""" 
 	if request.user.is_authenticated():
+		# redirects to home if user is signed in
 		return HttpResponseRedirect(reverse("social:home"))
 	if request.method == 'POST':
 		form = CreateUserForm(request.POST)
@@ -60,22 +69,24 @@ def register(request):
 				'form' : form,
 				'error_message' : 'The information you entered is not valid. Please re-enter and try again.',
 			})
-	else:
-		form = CreateUserForm()
+	form = CreateUserForm()
 	return render(request, "social/register.html", {
 		'form': form,
 	})
 
 def home(request):
 	if not request.user.is_authenticated():
-		# redirects to index page
+		# redirects to index page if user is not signed in
 		return HttpResponseRedirect(reverse("social:index"))
 	avatar = None
+	# set to none initially so that no errors are raised when it tries to load your profile pic
 	try:
 		avatar = request.user.profile.image_set.get(is_avatar=True)
+		# tries to pull your profile pic
 	except Image.DoesNotExist:
 		pass
 	if request.method == 'POST':
+		# takes the value pulled from facebook and saves it to your profile
 		fb_id = request.POST.get('fb_id', '')
 		if fb_id:
 			request.user.profile.fb_id = fb_id
@@ -100,8 +111,9 @@ def home(request):
 	})
 
 def change_profile(request):
+	# replaces data in the user profile which by default is mostly blank
 	if not request.user.is_authenticated():
-		# redirects to index page
+		# redirects to index page if user is not signed in
 		return HttpResponseRedirect(reverse("social:index"))
 	if request.method == 'POST':
 		form = ProfileForm(request.POST, instance=request.user.profile)
@@ -120,8 +132,9 @@ def change_profile(request):
 	})
 
 def upload_photo(request):
+	# uses form to upload images as well as loading the users images so they don't upload them again
 	if not request.user.is_authenticated():
-		# redirects to index page
+		# redirects to index page if user is not signed in
 		return HttpResponseRedirect(reverse("social:index"))
 	pics = request.user.profile.image_set.all()
 	if request.method == 'POST':
@@ -142,8 +155,11 @@ def upload_photo(request):
 	})
 
 def set_avatar(request):
+	""" loops through all user images and sets none of them as the profile pic
+		then sets the selected one as the profile pic
+	""" 
 	if not request.user.is_authenticated():
-		# redirects to index page
+		# redirects to index page if user is not signed in
 		return HttpResponseRedirect(reverse("social:index"))
 	if request.method == 'POST':
 		pics = request.user.profile.image_set.all()
@@ -157,11 +173,15 @@ def set_avatar(request):
 		return HttpResponseRedirect(reverse("social:home"))
 
 def profile(request, user_id):
+	""" loads the users data and images based on their primary key value
+		also uses form to make wall posts
+	"""
 	if not request.user.is_authenticated():
-		# redirects to index page
+		# redirects to index page if user is not signed in
 		return HttpResponseRedirect(reverse("social:index"))
 	avatar = None
 	user = User.objects.get(pk=user_id)
+	pics = user.profile.image_set.all()
 	try:
 		avatar = user.profile.image_set.get(is_avatar=True)
 	except Image.DoesNotExist:
@@ -175,9 +195,11 @@ def profile(request, user_id):
 		'avatar': avatar,
 		'user': user,
 		'form': form,
+		'pics': pics,
 	})
 
 def make_comment(request, user_id):
+	# adds comments to wall post then returns the user to the profile
 	user = User.objects.get(pk=user_id)
 	post = request.POST.get('post', '')
 	post_id = WallPost.objects.get(pk=post)
@@ -187,8 +209,9 @@ def make_comment(request, user_id):
 	return HttpResponseRedirect(reverse("social:profile", kwargs={'user_id': user.id,}))
 
 def search(request):
+	# uses the functions within utils.py to search based on the search form
 	if not request.user.is_authenticated():
-		# redirects to index page
+		# redirects to index page if user is not signed in
 		return HttpResponseRedirect(reverse("social:index"))
 	query_string = ''
 	results = None

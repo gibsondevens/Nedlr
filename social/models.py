@@ -22,6 +22,9 @@ class Image(models.Model):
 	profile = models.ForeignKey(Profile)
 
 	def make_pic_dir(instance, filename):
+		""" creates a random string to use as the new name for uploaded images
+			then appends it with the filetype of the original
+		"""
 		return '%s/%s' % ('images', str(uuid.uuid4()) + '.' + filename.split('.')[-1])
 		
 	pic = models.ImageField(upload_to=make_pic_dir)
@@ -33,14 +36,8 @@ class WallPost(models.Model):
 	poster_username = models.CharField(max_length=20)
 	post_text = models.TextField(max_length=200, verbose_name='Write wall post')
 
-	def __str__(self):
-		return '%s: %s' % (self.poster_username, self.post_text)
-
 class Comment(models.Model):
 	post = models.ForeignKey(WallPost)
 	poster_id = models.IntegerField()
 	poster_username = models.CharField(max_length=20)
 	comment_text = models.CharField(max_length=200, verbose_name='Write comment')
-
-	def __str__(self):
-		return '%s: %s' % (self.poster_username, self.comment_text)

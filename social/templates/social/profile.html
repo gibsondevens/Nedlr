@@ -60,4 +60,20 @@
 			{% endif %}
 		</div>
 	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h2>Gallery</h2>
+			{% if pics %}
+				<div class="row">
+					{% for image in pics %}
+						<div class="col-md-2">
+							<img class="gallery-pics" src="{{ image.pic.url }}" />
+						</div>
+					{% endfor %}
+				</div>
+			{% else %}
+				<p>There are no images uploaded for this user</p>
+			{% endif %}
+		</div>
+	</div>
 {% endblock content %}
