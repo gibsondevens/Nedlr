@@ -1,11 +1,7 @@
-import datetime
-import random
 import uuid
 
 from django.db import models
-from django.utils import timezone
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
 
 # Create your models here.
 class Profile(models.Model):
@@ -29,3 +25,22 @@ class Image(models.Model):
 		return '%s/%s' % ('images', str(uuid.uuid4()) + '.' + filename.split('.')[-1])
 		
 	pic = models.ImageField(upload_to=make_pic_dir)
+	is_avatar = models.BooleanField(default=False)
+
+class WallPost(models.Model):
+	profile = models.ForeignKey(Profile)
+	poster_id = models.IntegerField()
+	poster_username = models.CharField(max_length=20)
+	post_text = models.TextField(max_length=200, verbose_name='Write wall post')
+
+	def __str__(self):
+		return '%s: %s' % (self.poster_username, self.post_text)
+
+class Comment(models.Model):
+	post = models.ForeignKey(WallPost)
+	poster_id = models.IntegerField()
+	poster_username = models.CharField(max_length=20)
+	comment_text = models.CharField(max_length=200, verbose_name='Write comment')
+
+	def __str__(self):
+		return '%s: %s' % (self.poster_username, self.comment_text)

@@ -4,20 +4,20 @@ Facebook Login Integration (done)
 
 Personal "Profiles" where you can set information about yourself (done)
 
-Upload Photos to Profile
+Upload Photos to Profile (done)
 
-Set already-uploaded photo as Profile Picture
+Set already-uploaded photo as Profile Picture (done)
 
-View other profile's Information and Wall
+View other profile's Information and Wall (done)
 
-Post to your own Wall
+Post to your own Wall (done)
 
 Post to another profile's wall
-	# Note that all profiles are Public... no friend requests necessary
+	# Note that all profiles are Public... no friend requests necessary (done)
 
-Comment system for all Wall Posts
+Comment system for all Wall Posts (done)
 
-Simple Search for finding Other Profiles
+Simple Search for finding Other Profiles (done)
 
 ######################################
 # needed views *associated template: #
@@ -28,19 +28,15 @@ Simple Search for finding Other Profiles
 		registration *register.html
 		home *home.html
 			edit info *profile_change.html
-		profiles
-			your profile
-				make post
-				photo galleries
-				write comment on posts
-			others profiles
-				photo galleries
-				write comment on posts
-		search result
+			photo galleries *photos.html
+		search result *search_results.html
+		profiles *profile.html
+			make post *profile.html
+			write comment on posts *profile.html
 
-######################
-# template structure #
-######################
+#######################
+# template structure: #
+#######################
 
 {% extends "social/base.html" %}
 {% load staticfiles %}

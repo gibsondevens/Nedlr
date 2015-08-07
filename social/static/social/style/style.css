@@ -85,9 +85,40 @@ h1 small {
 }
 
 .gallery-pics {
+	height: 200px;
+	width: 200px;
+	border: 2px solid #FF96AC;
+}
+
+.nope {
+	float: none !important;
+}
+
+.profile-pic {
 	height: 100px;
 	width: 100px;
-	border: 2px solid #005300;
+	border: 2px solid #FF96AC;
+}
+
+.profile-info {
+	float: left;
+	clear: both;
+}
+
+.wall {
+	float: right;
+}
+
+.comment {
+	position: relative;
+	left: 25px;
+	bottom: 10px;
+}
+
+.comment-btn {
+	position: relative;
+	left: 25px;
+	bottom: 15px;
 }
 
 #search {
@@ -114,6 +145,7 @@ h1 small {
 	top: 4px
 }
 
-.nope {
-	float: none !important;
+#comment_text {
+	position: relative;
+	bottom: 15px;
 }

@@ -2,7 +2,13 @@
 {% load staticfiles %}
 
 {% block content %}
-	<p>Welcome, {{ user.first_name }}. Thanks for logging in.</p>
+	<h1>Welcome, {{ user.first_name }}. <small>Thanks for logging in.</small></h1>
+	<h1><small>Profile Pic:</small></h1>
+	{% if avatar %}
+		<img src="{{ avatar.pic.url }}" class="profile-pic"/>
+	{% else %}
+		<p>No Profile Pic set.</p>
+	{% endif %}
 	<form action="" method="post" class="nope" id="enable_fb">
 		{% csrf_token %}
 		<input type="hidden" name="fb_id" value="" id="fb_id">
@@ -20,6 +26,7 @@
 		{% endif %}
 		
 	</form>
-	<button type="button" class="btn btn-danger"><a href="{% url 'social:profile_change' %}">Update Profile</a></button>
-	<button type="button" class="btn btn-danger"><a href="{% url 'social:upload_photo' %}">Upload Photos</a></button>
+	<button type="button" class="btn btn-danger"><a href="{% url 'social:profile_change' %}">Update Profile Info</a></button>
+	<button type="button" class="btn btn-danger"><a href="{% url 'social:upload_photo' %}">Upload/Edit Photos</a></button>
+	<button type="button" class="btn btn-danger"><a href="{% url 'social:profile' request.user.id %}">View Profile</a></button>
 {% endblock content %}

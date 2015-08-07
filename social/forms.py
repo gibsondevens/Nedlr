@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Profile, Image
+from .models import Profile, Image, WallPost, Comment
 
 class CreateUserForm(UserCreationForm):
 	class Meta:
@@ -21,4 +21,14 @@ class UploadImageForm(forms.ModelForm):
 		fields = ("profile", "pic",)
 		widgets = {
 			'profile': forms.HiddenInput()
+		}
+
+class MakeWallPostForm(forms.ModelForm):
+	class Meta:
+		model = WallPost
+		fields = ('profile', 'post_text', 'poster_id', 	"poster_username",)
+		widgets = {
+			'profile': forms.HiddenInput(),
+			'poster_id': forms.HiddenInput(),
+			'poster_username': forms.HiddenInput(),
 		}

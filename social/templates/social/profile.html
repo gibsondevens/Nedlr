@@ -2,16 +2,62 @@
 {% load staticfiles %}
 
 {% block content %}
-	<div class="row">
-		<div class="col-md-12">
-			<h1>{{ user.username }} <small>({{ user.first_name }} {{ user.last_name }})</small></h1>
-			<p>I am a {{ user.profile.religion }}</p>
+	<div class="col-md-6 profile-info">
+		<div class="row">
+			<div class="profile-info">
+				<a href="{% url 'social:profile' user.pk %}">
+					<h1>{{ user.username }} <small>({{ user.first_name }} {{ user.last_name }})</small></h1>
+				</a>
+				{% if avatar %}
+					<img src="{{ avatar.pic.url }}" class="profile-pic"/>
+				{% else %}
+					<p>No Profile Pic set.</p>
+				{% endif %}
+				<p>I am a {{ user.profile.religion }}</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="">
+				<h6>Bio:</h6>
+				<p>{{ user.profile.bio }}</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="">
+				<form action="" method="post">
+					{% csrf_token %}
+					{{ form.as_p }}
+					<button type="submit" class="btn btn-danger">Make Wall Post</button>
+				</form>
+			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-4">
-			<h6>Bio:</h6>
-			<p>{{ user.profile.bio }}</p>
+	<div class="col-md-6 wall">
+		<div>
+			<h3>Wall:</h3>
+			{% if user.profile.wallpost_set.all %}
+				<ul class="wallpost">
+					{% for post in user.profile.wallpost_set.all reversed %}
+						<li><h4>{{ post.post_text }}</h4>
+							{% if post.comment_set.all %}
+								<ul class="comment">
+									{% for comment in post.comment_set.all %}
+										<li><p>{{ comment.comment_text }}</p></li>
+									{% endfor %}
+								</ul>
+							{% endif %}
+						</li>
+						<form action="{% url 'social:comment' user.pk %}" method="post">
+							{% csrf_token %}
+							<input type="hidden" name="post" value="{{ post.id }}" id="post"/>
+							<input type="text" name="comment_text" value="" class="comment" id="comment_text" />
+							<button type="submit" class="btn-small btn-danger comment-btn">Post Comment</button>
+						</form>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<p>No wall posts.</p>
+			{% endif %}
 		</div>
 	</div>
 {% endblock content %}

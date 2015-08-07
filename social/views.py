@@ -3,16 +3,13 @@ from django.db import IntegrityError
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.template import RequestContext, loader
+from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from django.views import generic
-from django.utils import timezone
 
-from .models import Profile, Image
-from .forms import CreateUserForm, ProfileForm, UploadImageForm
+from .models import Profile, Image, WallPost, WallPost, Comment
+from .forms import CreateUserForm, ProfileForm, UploadImageForm, MakeWallPostForm
 from .utils import normalize_query, get_query
 
 # Create your views here.
@@ -56,9 +53,7 @@ def register(request):
 		if form.is_valid():
 			new_user = form.save()
 			Profile.objects.create(user=new_user)
-			return HttpResponseRedirect(reverse("social:index"), {
-				'success_message' : 'You have succesfully created a profile. Please re-enter your credentials to log in.'
-			})
+			return HttpResponseRedirect(reverse("social:index"))
 		else:
 			# Show an error message
 			return render(request, "social/register.html", {
@@ -75,25 +70,34 @@ def home(request):
 	if not request.user.is_authenticated():
 		# redirects to index page
 		return HttpResponseRedirect(reverse("social:index"))
-	else:
-		if request.method == 'POST':
-			fb_id = request.POST.get('fb_id', '')
-			if fb_id:
-				request.user.profile.fb_id = fb_id
-				try:
-					request.user.profile.save()
-				except IntegrityError:
-					return render(request, "social/home.html", {
-						'error_message' : 'It looks like that Facebook account is already linked to one of your neighborinos.'
-					})
+	avatar = None
+	try:
+		avatar = request.user.profile.image_set.get(is_avatar=True)
+	except Image.DoesNotExist:
+		pass
+	if request.method == 'POST':
+		fb_id = request.POST.get('fb_id', '')
+		if fb_id:
+			request.user.profile.fb_id = fb_id
+			try:
+				request.user.profile.save()
+			except IntegrityError:
 				return render(request, "social/home.html", {
-					'success_message' : 'Your Facebook is now linked with your Nedlr account.'
+					'avatar': avatar,
+					'error_message' : 'It looks like that Facebook account is already linked to one of your neighborinos.'
 				})
-			else:
-				return render(request, "social/home.html", {
-					'error_message' : 'It looks like we did not receive any information from Facebook.'
-				})
-		return render(request, "social/home.html")
+			return render(request, "social/home.html", {
+				'avatar': avatar,
+				'success_message' : 'Your Facebook is now linked with your Nedlr account.'
+			})
+		else:
+			return render(request, "social/home.html", {
+				'avatar': avatar,
+				'error_message' : 'It looks like we did not receive any information from Facebook.'
+			})
+	return render(request, "social/home.html", {
+		'avatar': avatar
+	})
 
 def change_profile(request):
 	if not request.user.is_authenticated():
@@ -110,8 +114,7 @@ def change_profile(request):
 				'form' : form,
 				'error_message' : 'The information you entered is not valid. Please re-enter and try again.',
 			})
-	else:
-		form = ProfileForm(instance=request.user.profile)
+	form = ProfileForm(instance=request.user.profile)
 	return render(request, "social/profile_change.html", {
 		'form': form,
 	})
@@ -132,22 +135,61 @@ def upload_photo(request):
 				'pics': pics,
 				'error_message' : 'The picture you entered is not valid. Please try again.',
 			})
-	else:
-		form = UploadImageForm(initial={"profile": request.user.profile})
+	form = UploadImageForm(initial={"profile": request.user.profile})
 	return render(request, "social/photos.html", {
 		'form' : form,
 		'pics': pics,
 	})
 
+def set_avatar(request):
+	if not request.user.is_authenticated():
+		# redirects to index page
+		return HttpResponseRedirect(reverse("social:index"))
+	if request.method == 'POST':
+		pics = request.user.profile.image_set.all()
+		for x in pics:
+			x.is_avatar = False
+			x.save()
+		pic_id = request.POST.get('avatar', '')
+		avatar = request.user.profile.image_set.get(pk=pic_id)
+		avatar.is_avatar = True
+		avatar.save()
+		return HttpResponseRedirect(reverse("social:home"))
+
 def profile(request, user_id):
 	if not request.user.is_authenticated():
 		# redirects to index page
 		return HttpResponseRedirect(reverse("social:index"))
+	avatar = None
+	user = User.objects.get(pk=user_id)
+	try:
+		avatar = user.profile.image_set.get(is_avatar=True)
+	except Image.DoesNotExist:
+		pass
+	if request.method == 'POST':
+		form = MakeWallPostForm(request.POST)
+		if form.is_valid():
+			new_post = form.save()
+	form = MakeWallPostForm(initial={"profile": user_id, "poster_id": request.user.id, 'poster_username': request.user.username, })
 	return render(request, "social/profile.html", {
-		'user': User.objects.get(pk=user_id),
+		'avatar': avatar,
+		'user': user,
+		'form': form,
 	})
 
+def make_comment(request, user_id):
+	user = User.objects.get(pk=user_id)
+	post = request.POST.get('post', '')
+	post_id = WallPost.objects.get(pk=post)
+	comment_text = request.POST.get('comment_text', '')
+	if comment_text:
+		Comment.objects.create(post=post_id, poster_id=request.user.id, poster_username=request.user.username, comment_text=comment_text)
+	return HttpResponseRedirect(reverse("social:profile", kwargs={'user_id': user.id,}))
+
 def search(request):
+	if not request.user.is_authenticated():
+		# redirects to index page
+		return HttpResponseRedirect(reverse("social:index"))
 	query_string = ''
 	results = None
 	if ('q' in request.GET) and request.GET['q'].strip():

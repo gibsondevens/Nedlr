@@ -4,30 +4,34 @@
 <html lang="en">
 <head>
 	<title>{% block title %}Nedlr{% endblock %}</title>
-	<meta name = "viewport" content = "width=device-width, initial-scale=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-	<link rel = "stylesheet" type = "text/css" href = "{% static 'social/style/reset.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'social/style/reset.css' %}" />
 		<!-- resets the browser styling -->
-	<link rel = "stylesheet" type = "text/css" href = "{% static 'social/style/bootstrap.min.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'social/style/bootstrap.min.css' %}" />
 		<!-- sets styling from bootstrap -->
-	<link rel = "stylesheet" type = "text/css" href = "{% static 'social/style/style.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'social/style/style.css' %}" />
 			<!-- sets my custom styling -->
-	<script type = "text/javascript" src = "{% static 'social/js/jquery-2.1.4.min.js' %}"></script>
-	<script type = "text/javascript" src = "{% static 'social/js/bootstrap.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'social/js/jquery-2.1.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'social/js/bootstrap.min.js' %}"></script>
 </head>
 
 <body>
-	<script type = "text/javascript" src = "{% static 'social/js/facebook.sdk.js' %}"></script>
+	<script type="text/javascript" src="{% static 'social/js/facebook.sdk.js' %}"></script>
 
-	<div class = "container-fluid">
-		<div class = "row header">
-			<div class = "col-md-4 logo-field">
-				<a href="{% url 'social:index' %}"><img class = "mugshot" src="{% static 'social/style/images/image1.jpeg' %}" /><h1 class = "index-title">{% block logo %}Nedlr{% endblock logo %}</h1></a>
+	<div class="container-fluid">
+		<div class="row header">
+			<div class="col-md-4 logo-field">
+				<a href="{% url 'social:index' %}"><img class="mugshot" src="{% static 'social/style/images/image1.jpeg' %}" />
+					<h1 class="index-title">{% block logo %}Nedlr{% endblock logo %}</h1>
+				</a>
 			</div>
-			<div class = "col-md-4 notification-field">
+			<div class="col-md-4 notification-field">
 				{% if error_message %}
 					<div class="alert alert-danger alert-dismissible" role="alert">
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 						<strong>Woahdiddily!</strong> {{ error_message }}
 					</div>
 				{% endif %}
@@ -38,9 +42,11 @@
 					</div>
 				{% endif %}
 			</div>
-			<div class = "col-md-4 loginout">
+			<div class="col-md-4 loginout">
 				{% block loginout %}
-					<button type="button" class="btn btn-success logout"><a href="{% url 'social:logout' %}">Logout</a></button>
+					<button type="button" class="btn btn-success logout">
+						<a href="{% url 'social:logout' %}">Logout</a>
+					</button>
 					{% block search %}
 						<div class="row search">
 							<div class="col-md-12">
@@ -58,7 +64,7 @@
 
 
 
-		<div class = "body">
+		<div class="body">
 			{% block content %}Looks like there's nothing on this page{% endblock content %}
 		</div>
 	</div>

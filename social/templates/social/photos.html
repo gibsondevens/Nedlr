@@ -7,8 +7,8 @@
 
 {% block content %}
 	{% if form %}
-		<div class = "row">
-			<div class = "col-md-12">
+		<div class="row">
+			<div class="col-md-12">
 				<h2>Upload a photo</h1>
 				<form action="" method="post" enctype="multipart/form-data">
 					{% csrf_token %}
@@ -26,7 +26,12 @@
 				<div class="row">
 					{% for image in pics %}
 						<div class="col-md-2">
-							<img class="gallery-pics" src="{{ image.pic.url }}" /> 
+							<form action="{% url 'social:set_avatar' %}" method="post" >
+								{% csrf_token %}
+								<img class="gallery-pics" src="{{ image.pic.url }}" />
+								<input type="hidden" value="{{ image.pk }}" name="avatar" id="avatar">
+								<button type="submit" class="btn btn-small btn-danger avatar-btn">Set as Profile Pic</button>
+							</form>
 						</div>
 					{% endfor %}
 				</div>
