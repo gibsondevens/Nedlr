@@ -38,11 +38,11 @@
 			{% if user.profile.wallpost_set.all %}
 				<ul class="wallpost">
 					{% for post in user.profile.wallpost_set.all reversed %}
-						<li><h4>{{ post.post_text }}</h4>
+						<li><h4>{{ post.poster_username }}: {{ post.post_text }}</h4>
 							{% if post.comment_set.all %}
 								<ul class="comment">
 									{% for comment in post.comment_set.all %}
-										<li><p>{{ comment.comment_text }}</p></li>
+										<li><p>{{ comment.poster_username }}: {{ comment.comment_text }}</p></li>
 									{% endfor %}
 								</ul>
 							{% endif %}
