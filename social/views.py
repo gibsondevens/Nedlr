@@ -1,6 +1,9 @@
+import datetime
+
 from django import forms
 from django.db import IntegrityError
 from django.contrib import auth
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
@@ -8,7 +11,7 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 
-from .models import Profile, Image, WallPost, WallPost, Comment
+from .models import Profile, Image, WallPost, WallPost, Comment, Notification
 from .forms import CreateUserForm, ProfileForm, UploadImageForm, MakeWallPostForm
 from .utils import normalize_query, get_query
 
@@ -190,6 +193,7 @@ def profile(request, user_id):
 		form = MakeWallPostForm(request.POST)
 		if form.is_valid():
 			new_post = form.save()
+			Notification.objects.create(user=user, notif_type='Wall Post', notif_text='Some one has posted on your Wall', notif_date=timezone.now())
 	form = MakeWallPostForm(initial={"profile": user_id, "poster_id": request.user.id, 'poster_username': request.user.username, })
 	return render(request, "social/profile.html", {
 		'avatar': avatar,
@@ -206,6 +210,7 @@ def make_comment(request, user_id):
 	comment_text = request.POST.get('comment_text', '')
 	if comment_text:
 		Comment.objects.create(post=post_id, poster_id=request.user.id, poster_username=request.user.username, comment_text=comment_text)
+		Notification.objects.create(user=user, notif_type='Comment', notif_text='Someone has commented on your Wall Post', notif_date=timezone.now())
 	return HttpResponseRedirect(reverse("social:profile", kwargs={'user_id': user.id,}))
 
 def search(request):
@@ -223,6 +228,16 @@ def search(request):
 		'query_string': query_string,
 		'results': results
 	}, context_instance=RequestContext(request))
+
+def remove_notif(request):
+	# uses the functions within utils.py to search based on the search form
+	if not request.user.is_authenticated():
+		# redirects to index page if user is not signed in
+		return HttpResponseRedirect(reverse("social:index"))
+	if request.method == 'POST':
+		all_notifs = request.user.notification_set.all()
+		all_notifs.delete()
+	return HttpResponseRedirect(reverse("social:home"))
 
 def logout(request):
 	auth.logout(request)

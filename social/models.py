@@ -36,8 +36,27 @@ class WallPost(models.Model):
 	poster_username = models.CharField(max_length=20)
 	post_text = models.TextField(max_length=200, verbose_name='Write wall post')
 
+	def __str__(self):
+		return '%s//%s: %s' % (self.profile, self.poster_username, self.post_text)
+
 class Comment(models.Model):
 	post = models.ForeignKey(WallPost)
 	poster_id = models.IntegerField()
 	poster_username = models.CharField(max_length=20)
 	comment_text = models.CharField(max_length=200, verbose_name='Write comment')
+
+	def __str__(self):
+		return '%s//%s: %s' % (self.post, self.poster_username, self.comment_text)
+
+class Notification(models.Model):
+	user = models.ForeignKey(User)
+	TYPE_CHOICES = (
+		('Wall Post', 'Wall Post'),
+		('Comment', 'Comment')
+	)
+	notif_type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+	notif_text = models.CharField(max_length=40)
+	notif_date = models.DateTimeField(verbose_name='Notification Date')
+
+	def __str__(self):
+		return '%s: %s' % (self.user.username, self.notif_type)

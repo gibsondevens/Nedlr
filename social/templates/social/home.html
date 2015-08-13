@@ -2,31 +2,61 @@
 {% load staticfiles %}
 
 {% block content %}
-	<h1>Welcome, {{ user.first_name }}. <small>Thanks for logging in.</small></h1>
-	<h1><small>Profile Pic:</small></h1>
-	{% if avatar %}
-		<img src="{{ avatar.pic.url }}" class="profile-pic"/>
-	{% else %}
-		<p>No Profile Pic set.</p>
-	{% endif %}
-	<form action="" method="post" class="nope" id="enable_fb">
-		{% csrf_token %}
-		<input type="hidden" name="fb_id" value="" id="fb_id">
-		{% if user.profile.fb_id %}
-			Update linked Facebook account: 
+	<div class="col-md-6">
+		<h1>Welcome, {{ user.first_name }}. <small>Thanks for logging in.</small></h1>
+		<h1><small>Profile Pic:</small></h1>
+		{% if avatar %}
+			<img src="{{ avatar.pic.url }}" class="profile-pic"/>
 		{% else %}
-			Enable: 
+			<p>No Profile Pic set.</p>
 		{% endif %}
-		<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-		</fb:login-button>
-		{% if user.profile.fb_id %}
-			<p>Facebook is linked</p>
-		{% else %}
-			<p>Facebook is not linked</p>
-		{% endif %}
-		
-	</form>
-	<button type="button" class="btn btn-danger"><a href="{% url 'social:profile_change' %}">Update Profile Info</a></button>
-	<button type="button" class="btn btn-danger"><a href="{% url 'social:upload_photo' %}">Upload/Edit Photos</a></button>
-	<button type="button" class="btn btn-danger"><a href="{% url 'social:profile' request.user.id %}">View Profile</a></button>
+		<form action="" method="post" class="nope" id="enable_fb">
+			{% csrf_token %}
+			<input type="hidden" name="fb_id" value="" id="fb_id">
+			{% if user.profile.fb_id %}
+				Update linked Facebook account: 
+			{% else %}
+				Enable: 
+			{% endif %}
+			<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+			</fb:login-button>
+			{% if user.profile.fb_id %}
+				<p>Facebook is linked</p>
+			{% else %}
+				<p>Facebook is not linked</p>
+			{% endif %}
+			
+		</form>
+		<button type="button" class="btn btn-danger"><a href="{% url 'social:profile_change' %}">Update Profile Info</a></button>
+		<button type="button" class="btn btn-danger"><a href="{% url 'social:upload_photo' %}">Upload/Edit Photos</a></button>
+		<button type="button" class="btn btn-danger"><a href="{% url 'social:profile' request.user.id %}">View Profile</a></button>
+	</div>
+	<div class="notif-field col-md-6">
+		<div class="slide">
+			<h1>
+				Notifications
+				<button type="button" class="btn btn-danger pull-me">
+					{% if user.notification_set.all %}
+						New!
+					{% endif %}
+					<span class="caret"></span>
+				</button>
+			</h1>
+		</div>
+		<div class="panel">
+			{% if user.notification_set.all %}
+				{% for notification in user.notification_set.all reversed %}
+					<a href="{% url 'social:profile' request.user.id %}">
+						<p>{{ notification.notif_date }}: {{ notification.notif_text }}</p>
+					</a>
+				{% endfor %}
+				<form action="{% url 'social:remove_notif' %}" method="post">
+					{% csrf_token %}
+					<button type="submit" class="btn btn-success">Clear Notifications</button>
+				</form>
+			{% else %}
+				<p>No notifications</p>
+			{% endif %}
+		</div>
+	</div>
 {% endblock content %}

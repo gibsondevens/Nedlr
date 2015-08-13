@@ -125,6 +125,10 @@ h1 small {
 	bottom: 15px;
 }
 
+.panel {
+	background-color: #FF96AC
+}
+
 #search {
 	position: relative;
 	top: 5px;
