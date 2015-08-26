@@ -230,7 +230,6 @@ def search(request):
 	}, context_instance=RequestContext(request))
 
 def remove_notif(request):
-	# uses the functions within utils.py to search based on the search form
 	if not request.user.is_authenticated():
 		# redirects to index page if user is not signed in
 		return HttpResponseRedirect(reverse("social:index"))
